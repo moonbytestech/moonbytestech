@@ -1,0 +1,86 @@
+<!-- SECCIÓN DE NOTICIAS -->
+<section id="noticias" style="background-color: #0a0a0a; color: #fff; padding: 40px 20px; font-family: 'Rajdhani', sans-serif;">
+  <div style="max-width: 1200px; margin: auto;">
+    <h2 style="text-align: center; font-size: 32px; color: #ff69b4;">🛰 Noticias Tech Actualizadas</h2>
+    <div id="feed" style="margin-top: 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px;"></div>
+  </div>
+</section>
+
+<!-- SECCIÓN DE TIPS TECNOLÓGICOS -->
+<section id="tips" style="background-color: #111; color: #fff; padding: 40px 20px; font-family: 'Rajdhani', sans-serif;">
+  <div style="max-width: 1200px; margin: auto;">
+    <h2 style="text-align: center; font-size: 32px; color: #ff69b4;">💡 Tips Rápidos de Tecnología</h2>
+    <div id="tips-list" style="margin-top: 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;"></div>
+  </div>
+</section>
+
+<!-- SECCIÓN DE HERRAMIENTAS DE IA -->
+<section id="ia-tools" style="background-color: #0a0a0a; color: #fff; padding: 40px 20px; font-family: 'Rajdhani', sans-serif;">
+  <div style="max-width: 1200px; margin: auto;">
+    <h2 style="text-align: center; font-size: 32px; color: #00ffcc;">🤖 Herramientas de IA que Deberías Conocer</h2>
+    <div id="ia-list" style="margin-top: 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;"></div>
+  </div>
+</section>
+
+<script>
+// Noticias Tech desde RSS (con proxy temporal)
+const rssUrl = "https://corsproxy.io/?https://www.theverge.com/rss/index.xml";
+fetch(rssUrl)
+  .then(response => response.text())
+  .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+  .then(data => {
+    const items = data.querySelectorAll("item");
+    let html = "";
+    items.forEach((el, index) => {
+      if (index < 6) {
+        const title = el.querySelector("title").textContent;
+        const link = el.querySelector("link").textContent;
+        const pubDate = new Date(el.querySelector("pubDate").textContent).toLocaleDateString();
+        html += `
+          <div style="background-color: #1a1a1a; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(255, 105, 180, 0.2);">
+            <h3 style="color: #ff69b4; font-size: 18px;">${title}</h3>
+            <p style="font-size: 14px; color: #ccc;">Publicado el: ${pubDate}</p>
+            <a href="${link}" target="_blank" style="color: #00bfff; text-decoration: underline;">Leer más</a>
+          </div>`;
+      }
+    });
+    document.getElementById("feed").innerHTML = html;
+  })
+  .catch(error => {
+    document.getElementById("feed").innerHTML = "<p>No se pudo cargar el feed. Intenta más tarde.</p>";
+    console.error("Error al cargar el RSS:", error);
+  });
+
+// Tips tecnológicos
+const tips = [
+  { titulo: "Atajos de teclado", contenido: "Usa Ctrl + Shift + T para recuperar pestañas cerradas en Chrome." },
+  { titulo: "Modo oscuro", contenido: "Activa el modo oscuro para cuidar tus ojos desde configuración." },
+  { titulo: "Organiza tu escritorio", contenido: "Usa escritorios virtuales con Windows + Ctrl + D." }
+];
+
+const tipsContainer = document.getElementById("tips-list");
+tips.forEach(tip => {
+  tipsContainer.innerHTML += `
+    <div style="background-color: #1a1a1a; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(255, 105, 180, 0.2);">
+      <h3 style="color: #ff69b4; font-size: 20px;">${tip.titulo}</h3>
+      <p style="color: #ccc; font-size: 15px;">${tip.contenido}</p>
+    </div>`;
+});
+
+// Herramientas de IA
+const iaTools = [
+  { nombre: "ChatGPT", descripcion: "Tu copiloto para escribir, programar y aprender rápido.", enlace: "https://chat.openai.com" },
+  { nombre: "Canva IA", descripcion: "Genera diseños increíbles en segundos con prompts.", enlace: "https://www.canva.com/magic-design/" },
+  { nombre: "Krisp", descripcion: "Elimina ruido de fondo en tus videollamadas con IA.", enlace: "https://krisp.ai" }
+];
+
+const iaContainer = document.getElementById("ia-list");
+iaTools.forEach(tool => {
+  iaContainer.innerHTML += `
+    <div style="background-color: #141414; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 255, 204, 0.2);">
+      <h3 style="color: #00ffcc; font-size: 20px;">${tool.nombre}</h3>
+      <p style="color: #aaa; font-size: 15px;">${tool.descripcion}</p>
+      <a href="${tool.enlace}" target="_blank" style="color: #00bfff;">Probar ahora</a>
+    </div>`;
+});
+</script>
